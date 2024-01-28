@@ -92,6 +92,13 @@ class CalendarTestCase(APITestCase):
         self.assertEquals(response.status_code, status.HTTP_200_OK)
         self.assertTrue(self.user2 not in calendar.users.all())
 
+    def test_calendar_delete_user_not_in_users(self):
+        calendar = create_calendar("calendar", self.user1, [self.user1])
+        response = self.client1.post(reverse("remove-users", kwargs={"pk": calendar.id}),
+                                     {"users": [self.user2.username]}, format='json')
+        self.assertEquals(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+
     def test_calendar_delete_owner(self):
         calendar = create_calendar("calendar", self.user1, [self.user1, self.user2])
         response = self.client1.post(reverse("remove-users", kwargs={"pk": calendar.id}),
