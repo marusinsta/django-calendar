@@ -1,7 +1,6 @@
 from django.contrib import admin
 
-from core.models import Calendar
+from core.models import Calendar, Event
 
 admin.site.register(Calendar)
-
-# Register your models here.
+admin.site.register(Event)
