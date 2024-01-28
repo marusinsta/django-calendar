@@ -17,3 +17,9 @@ class CustomUserShortSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ['username']
+
+
+class CustomUserEmptySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = []

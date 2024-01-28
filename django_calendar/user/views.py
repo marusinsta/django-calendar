@@ -1,3 +1,4 @@
+from drf_spectacular.utils import extend_schema, OpenApiResponse
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.generics import GenericAPIView
@@ -7,7 +8,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from .models import CustomUser
 from .permissions import IsAuthenticatedWithoutCreate
-from .serializers import CustomUserSerializer, CustomUserShortSerializer
+from .serializers import CustomUserSerializer, CustomUserShortSerializer, CustomUserEmptySerializer
 
 
 class CustomUserViewSet(ModelViewSet):
@@ -30,10 +31,15 @@ class CustomUserViewSet(ModelViewSet):
 
 class LogOutView(GenericAPIView):
     permission_classes = (IsAuthenticated,)
+    serializer_class = CustomUserEmptySerializer
 
+    @extend_schema(responses={
+        '200': OpenApiResponse(description="Successfully logged out"),
+        '500': OpenApiResponse(description="Failed to log out")
+    })
     def post(self, request):
         try:
             request.user.auth_token.delete()
         except Exception:
-            return Response({"message": "Failed to logout"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        return Response({"success": "Successfully logged out"}, status=status.HTTP_200_OK)
+            return Response(data={"message": "Failed to log out"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response(data={"success": "Successfully logged out"}, status=status.HTTP_200_OK)

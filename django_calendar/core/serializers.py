@@ -27,6 +27,12 @@ class CalendarPublicSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'owner']
 
 
+class CalendarEmptySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Calendar
+        fields = []
+
+
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
